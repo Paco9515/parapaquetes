@@ -4,8 +4,8 @@
 </template>
 
 <script>
-  import Listado from './components/Listado.vue'
-  import Header from './components/Header.vue'
+  import Listado from './pages/Listado.vue'
+  import Header from './pages/Header.vue'
 
 
   export default {
