@@ -106,6 +106,7 @@
   import Swal from 'sweetalert2'
         
   export default {
+    name:'list',
     data() {
       return {
         url : "https://eshop-deve.herokuapp.com/api/v2/orders",
@@ -219,6 +220,10 @@
 </script>
 
 <style scoped>
+template{
+  width: 80%;
+  margin-left: 10%;
+}
   button{
     width: 120px;
     height: 30px;
