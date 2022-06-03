@@ -1,7 +1,7 @@
 <template>
 
 <!-- DIV LISTA -->
-  <div v-if="list">
+  <div class="body" v-if="list">
     <br>
     <h3>Revision de Orden</h3>
     <h5>Numero: {{ order.number }}</h5>
@@ -57,7 +57,7 @@
 <!--  -->
 
 <!-- DIV FORM -->
-  <div v-if="form">
+  <div class="body" v-if="form">
       <br>
       <h3>Agregar Nuevo Articulo</h3>
       <br>
@@ -143,10 +143,13 @@
 
       hideForm(){
         this.sku = "";
-        this.alert_sku = "";
+        this.alert_sku = false;
         this.name = "";
+        this.alert_name = false;
         this.quantity = "";
+        this.alert_quantity = false;
         this.price = "";
+        this.alert_price = false;
 
         this.form = false;
         this.list = true;
@@ -176,8 +179,15 @@
         };
 
         this.order.items.push(new_item);
-        
-        this.hideForm();
+
+        this.alert_sku = false;
+        this.alert_name = false;
+        this.alert_quantity = false;
+        this.alert_price = false;
+
+        Swal.fire('Exito', 'Se agrego el producto correctamente.', 'success').then((result) => {
+          this.hideForm();
+        })        
       },
 
       payOrder() {
@@ -220,10 +230,10 @@
 </script>
 
 <style scoped>
-template{
-  width: 80%;
-  margin-left: 10%;
-}
+  .body{
+    width: 80%;
+    margin-left: 10%;
+  }
   button{
     width: 120px;
     height: 30px;
