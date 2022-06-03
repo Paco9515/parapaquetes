@@ -1,7 +1,43 @@
 <template>
 
-<!-- DIV LISTA -->
-  <div class="body" v-if="list">
+<!-- DIV LISTA DE ORDENES -->
+  <div class="body" v-if="divOrders">
+    <br>
+    <h3>Lista de Ordenes</h3>
+    <!-- DIV LOADING -->
+      <div v-if="loading">
+            <img :src="img_loader_url" alt="loading" style="width: 50px;display:block;margin:auto;">
+      </div>
+    <!--  -->
+    <!-- DIV DE LA TABLA -->
+        <table class="border table" style="margin: 0px;margin-top: 15px;">
+            <thead>
+              <tr>
+                  <th class="border" style="width: 30%;">Orden</th>
+                  <th class="border" style="width: 30%;">Total</th>
+                  <th class="border" style="width: 30%;">Estatus</th>
+                  <th class="border" style="width: 10%;">&nbsp;</th>
+              </tr>
+          </thead>
+        </table>
+        <div class="border divTable">
+            <table class="table table-sm table-striped" style="margin: 0px;">
+                <tbody>
+                    <tr v-for="order in orders">
+                        <td class="border" style="width: 30%;">{{ order.number }}</td>
+                        <td class="border" style="width: 30%;">{{ order.totals.total }}</td>
+                        <td class="border" style="width: 30%;">{{ order.payment.status }}</td>
+                        <td class="border" style="width: 10%;"><button class="btn btn-primary btnTable" @click="showOrder(order);">Ver</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    <!--  -->
+  </div>
+<!--  -->
+
+<!-- DIV LISTA DE ITEMS -->
+  <div class="body" v-if="divItmes">
     <br>
     <h3>Revision de Orden</h3>
     <h5>Numero: {{ order.number }}</h5>
@@ -13,14 +49,15 @@
 
     <!-- BOTON AGREGAR -->
       <div style="float: right;">
-        <button type="button" class="btn btn-success" @click="form = true;list = false">Agregar Item</button>
+        <button type="button" class="btn btn-primary" @click="backOrders()">Regresar</button>
+        &nbsp;
+        <button type="button" class="btn btn-success" @click="showForm()">Agregar Item</button>
       </div>
     <!--  -->
     <br>
     <!-- DVI DE LA TABLA -->
-      <div class="border" style="margin-top: 15px;height: 300px;">
-        <table class="table table-sm table-striped">
-          <thead>
+      <table class="table border" style="margin: 0px;margin-top: 15px;">
+        <thead>
               <tr>
                   <th style="width: 20%;">SKU</th>
                   <th style="width: 50%;">Nombre</th>
@@ -28,6 +65,9 @@
                   <th style="width: 15%;">Precio</th>
               </tr>
           </thead>
+      </table>
+      <div class="border divTable" >
+        <table class="table table-sm table-striped" style="margin: 0px;">          
           <tbody>
               <tr v-for="itemOrder in order.items">
                   <td>{{ itemOrder.sku }}</td>
@@ -57,7 +97,7 @@
 <!--  -->
 
 <!-- DIV FORM -->
-  <div class="body" v-if="form">
+  <div class="body" v-if="divForm">
       <br>
       <h3>Agregar Nuevo Articulo</h3>
       <br>
@@ -106,15 +146,16 @@
   import Swal from 'sweetalert2'
         
   export default {
-    name:'ordersList',
+    name:'List',
     data() {
       return {
         img_loader_url: require("../assets/images/preloader.gif"),
         url : "https://eshop-deve.herokuapp.com/api/v2/orders",
         header: "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwUGFINU55VXRxTUkzMDZtajd ZVHdHV3JIZE81cWxmaCIsImlhdCI6MTYyMDY2Mjk4NjIwM30.lhfzSXW9_TC67SdDKyD bMOYiYsKuSk6bG6XDE1wz2OL4Tq0Og9NbLMhb0LUtmrgzfWiTrqAFfnPldd8QzWvgVQ",
-        order: [],
-        form: false,
-        list: true,
+        order: [],        
+        divOrders: true,
+        divItmes: false,        
+        divForm: false,
         loading: false,
         sku: "",
         alert_sku: false,
@@ -128,18 +169,32 @@
       }
     },
     methods: {
-      prodcutList(){
-        this.loading = true;
-        axios.get(this.url, { 'headers': { 'Authorization': this.header } })
-        .then((response) => {
-            this.order = response.data.orders[0];
-            this.loading = false;
-            this.price_accumulated();
-        })
-        .catch((error) => {
-            console.log(error)
-            this.loading = false;
-        })        
+      ordersList(){
+          this.loading = true;
+          axios.get(this.url, { 'headers': { 'Authorization': this.header } })
+          .then((response) => {
+              this.orders = response.data.orders;
+              console.log(this.orders);
+              this.loading = false;
+          })
+          .catch((error) => {
+              console.log(error)
+              this.loading = false;
+          })        
+      },
+
+      showOrder(order){
+        this.divOrders = false;
+        this.divItmes = true;
+        this.divForm = false;
+        this.order = order;
+        this.price_accumulated();       
+      },
+
+      showForm(){
+        this.divOrders = false
+        this.divItmes = false
+        this.divForm = true;        
       },
 
       hideForm(){
@@ -152,8 +207,9 @@
         this.price = "";
         this.alert_price = false;
 
-        this.form = false;
-        this.list = true;
+        this.divForm = false;
+        this.divOrders = false;
+        this.divItmes = true;        
 
         this.price_accumulated();
       },
@@ -232,11 +288,17 @@
         if(this.price!=null && this.price.indexOf(".")>-1 && (this.price.split('.')[1].length > 1)){
           $event.preventDefault();
         }
+      },
+
+      backOrders(){
+        this.divForm = false;        
+        this.divItmes = false;
+        this.divOrders = true;
       }
       
     },
     created(){
-      this.prodcutList()
+      this.ordersList()
     },
 
 
@@ -254,6 +316,13 @@
     height: 30px;
     padding: 0px;
   }
+  .btnTable{
+    width: 50px;
+    height: 30px;
+    padding: 0px;
+    display: block;
+    margin: auto;
+  }
   .colOptions{
     width: 120px;
   }
@@ -261,4 +330,25 @@
     border-color: red;
     background-color: white;
   }
+  .divTable {
+        margin-top: 0px;
+        overflow: auto;
+        height: 300px;
+        overflow: auto; /*Firefox*/
+        overflow: overlay;
+    }
+    /*Webkit*/
+    .divTable::-webkit-scrollbar {
+        display: none;
+        width: 10px;
+        height: 10px;
+        background-color: lightblue;
+    }
+
+    .divTable:hover::-webkit-scrollbar {
+        display: initial;  
+    }
+    .divTable::-webkit-scrollbar-thumb {
+        background-color: #09C;
+    }
 </style>
