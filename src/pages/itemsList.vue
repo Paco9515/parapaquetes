@@ -126,7 +126,7 @@
           </div>
           <div class="col-3">
             <label for="price"><b>Precio</b></label>
-            <input id="price" name="price" type="text" class="form-control" @keypress="isNumberKeyDecimal()" v-bind:class="{ errorInput: alert_price }" v-model="price" required>
+            <input id="price" name="price" type="text" class="form-control" @keypress="isNumberKeyDecimal($event)" v-bind:class="{ errorInput: alert_price }" v-model="price" required>
             <small v-if="alert_price" class="text-danger">*Precio bligatorio</small>
           </div>
         </div>
