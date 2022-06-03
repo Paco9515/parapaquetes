@@ -13,10 +13,10 @@
         <table class="border table" style="margin: 0px;margin-top: 15px;">
             <thead>
               <tr>
-                  <th class="border" style="width: 30%;">Orden</th>
-                  <th class="border" style="width: 30%;">Total</th>
-                  <th class="border" style="width: 30%;">Estatus</th>
-                  <th class="border" style="width: 10%;">&nbsp;</th>
+                  <th style="width: 30%;">Orden</th>
+                  <th style="width: 30%;">Total</th>
+                  <th style="width: 30%;">Estatus</th>
+                  <th style="width: 10%;">&nbsp;</th>
               </tr>
           </thead>
         </table>
@@ -24,10 +24,10 @@
             <table class="table table-sm table-striped" style="margin: 0px;">
                 <tbody>
                     <tr v-for="order in orders">
-                        <td class="border" style="width: 30%;">{{ order.number }}</td>
-                        <td class="border" style="width: 30%;">{{ order.totals.total }}</td>
-                        <td class="border" style="width: 30%;">{{ order.payment.status }}</td>
-                        <td class="border" style="width: 10%;"><button class="btn btn-primary btnTable" @click="showOrder(order);">Ver</button></td>
+                        <td style="width: 30%;">{{ order.number }}</td>
+                        <td style="width: 30%;">{{ order.totals.total }}</td>
+                        <td style="width: 30%;">{{ order.payment.status }}</td>
+                        <td style="width: 10%;"><button class="btn btn-primary btnTable" @click="showOrder(order);">Ver</button></td>
                     </tr>
                 </tbody>
             </table>
@@ -70,10 +70,10 @@
         <table class="table table-sm table-striped" style="margin: 0px;">          
           <tbody>
               <tr v-for="itemOrder in order.items">
-                  <td>{{ itemOrder.sku }}</td>
-                  <td>{{ itemOrder.name }}</td>
-                  <td>{{ itemOrder.quantity }}</td>            
-                  <td>{{ itemOrder.price }}</td>
+                  <td style="width: 20%;">{{ itemOrder.sku }}</td>
+                  <td style="width: 50%;">{{ itemOrder.name }}</td>
+                  <td style="width: 15%;">{{ itemOrder.quantity }}</td>            
+                  <td style="width: 15%;">{{ itemOrder.price }}</td>
               </tr>
           </tbody>
         </table>
