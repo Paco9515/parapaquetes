@@ -7,7 +7,7 @@
     <h5>Numero: {{ order.number }}</h5>
     <!-- DIV LOADING -->
       <div v-if="loading">
-            <img src="../assets/preloader.gif" alt="loading" style="width: 50px;display:block;margin:auto;">
+            <img :src="img_loader_url" alt="loading" style="width: 50px;display:block;margin:auto;">
       </div>
     <!--  -->
 
@@ -86,7 +86,7 @@
           </div>
           <div class="col-3">
             <label for="price"><b>Precio</b></label>
-            <input id="price" name="price" type="text" class="form-control" v-bind:class="{ errorInput: alert_price }" v-model="price" required>
+            <input id="price" name="price" type="text" class="form-control" @keypress="isNumberKeyDecimal()" v-bind:class="{ errorInput: alert_price }" v-model="price" required>
             <small v-if="alert_price" class="text-danger">*Precio bligatorio</small>
           </div>
         </div>
@@ -106,9 +106,10 @@
   import Swal from 'sweetalert2'
         
   export default {
-    name:'list',
+    name:'ordersList',
     data() {
       return {
+        img_loader_url: require("../assets/images/preloader.gif"),
         url : "https://eshop-deve.herokuapp.com/api/v2/orders",
         header: "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwUGFINU55VXRxTUkzMDZtajd ZVHdHV3JIZE81cWxmaCIsImlhdCI6MTYyMDY2Mjk4NjIwM30.lhfzSXW9_TC67SdDKyD bMOYiYsKuSk6bG6XDE1wz2OL4Tq0Og9NbLMhb0LUtmrgzfWiTrqAFfnPldd8QzWvgVQ",
         order: [],
@@ -168,6 +169,7 @@
           if (name=="") { this.alert_name = true } else { this.alert_name = false }
           if (quantity=="") { this.alert_quantity = true } else { this.alert_quantity = false }
           if (price=="") { this.alert_price = true } else { this.alert_price = false }
+          if (isNan(price)) { this.alert_price = true } else { this.alert_price = false }
           return
         }
 
@@ -217,6 +219,19 @@
           accumulated =  Intl.NumberFormat('es-MX',{currency:'MXN',minimumFractionDigits: 2,maximumFractionDigits: 2}).format(accumulated);
         })
         this.total_order = accumulated;
+      },
+
+      isNumberKeyDecimal ($event) {
+
+        let keyCode = ($event.keyCode ? $event.keyCode : $event.which);
+
+        if ((keyCode < 48 || keyCode > 57) && (keyCode !== 46 || this.price.indexOf('.') != -1)) { // 46 is dot
+          $event.preventDefault();
+        }
+
+        if(this.price!=null && this.price.indexOf(".")>-1 && (this.price.split('.')[1].length > 1)){
+          $event.preventDefault();
+        }
       }
       
     },

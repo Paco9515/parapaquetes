@@ -1,17 +1,17 @@
 <template>
   <Header/>
-  <Listado/>
+  <OrdersList/>
 </template>
 
 <script>
-  import Listado from './pages/Listado.vue'
+  import OrdersList from './pages/OrdersList.vue'
   import Header from './pages/Header.vue'
 
 
   export default {
     name: 'App',
     components: {
-      Listado,
+      OrdersList,
       Header
     }
   }
