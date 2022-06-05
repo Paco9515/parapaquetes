@@ -82,8 +82,8 @@
 
     <!-- DIV TOTAL ORDEN -->
       <div class="row" style="padding: 5px 0px 0px 0px;margin: 0px;background-color: #f3f3f3;">
-        <div style="width: 85%;"><b style="float: right;">Total de la orden:</b></div>
-        <div style="width: 15%;"> {{ total_order }} </div>
+        <div class="col-9 col-sm-10 col-md-10 col-lg-10 col-xl-10"><b style="float: right;">Total de la orden:</b></div>
+        <div class="col-3 col-sm-2 col-md-2 col-lg-2 col-xl-2"> {{ total_order }} </div>
       </div>
     <!--  -->
     <br>
@@ -108,25 +108,25 @@
       <!--  -->
       <br>
       <!-- INPUTS -->
-        <div class="row">
-          <div class="col-3">
+        <div class="row mt-2">
+          <div class="col-sm-12 col-md-6 col-lg-3 col-xl-3">
             <label for="sku"><b>SKU</b></label>
             <input id="sku" name="sku" type="text" class="form-control" v-bind:class="{ errorInput: alert_sku }" v-model="sku" required>
             <small v-if="alert_sku" class="text-danger">*SKU bligatorio</small>
           </div>
-          <div class="col-3">
+          <div class="col-sm-12 col-md-6 col-lg-3 col-xl-3">
             <label for="name"><b>Nombre</b></label>
             <input id="name" name="name" type="text" class="form-control" v-bind:class="{ errorInput: alert_name }" v-model="name" required>
             <small v-if="alert_name" class="text-danger">*Nombre bligatorio</small>
           </div>
-          <div class="col-3">
+          <div class="col-sm-12 col-md-6 col-lg-3 col-xl-3">
               <label for="quantity"><b>Cantidad</b></label>
-                <input id="quantity" name="quantity" type="text" class="form-control" v-bind:class="{ errorInput: alert_quantity }" v-model="quantity" required>
+                <input id="quantity" name="quantity" type="text" class="form-control" @keypress="isNumberKeyDecimal(quantity, $event)" v-bind:class="{ errorInput: alert_quantity }" v-model="quantity" required>
                 <small v-if="alert_quantity" class="text-danger">*Cantidad bligatorio</small>
           </div>
-          <div class="col-3">
+          <div class="col-sm-12 col-md-6 col-lg-3 col-xl-3">
             <label for="price"><b>Precio</b></label>
-            <input id="price" name="price" type="text" class="form-control" @keypress="isNumberKeyDecimal($event)" v-bind:class="{ errorInput: alert_price }" v-model="price" required>
+            <input id="price" name="price" type="text" class="form-control" @keypress="isNumberKeyDecimal(price, $event)" v-bind:class="{ errorInput: alert_price }" v-model="price" required>
             <small v-if="alert_price" class="text-danger">*Precio bligatorio</small>
           </div>
         </div>
@@ -277,15 +277,15 @@
         this.total_order = accumulated;
       },
 
-      isNumberKeyDecimal ($event) {
+      isNumberKeyDecimal (input, $event) {
 
         let keyCode = ($event.keyCode ? $event.keyCode : $event.which);
 
-        if ((keyCode < 48 || keyCode > 57) && (keyCode !== 46 || this.price.indexOf('.') != -1)) { // 46 is dot
+        if ((keyCode < 48 || keyCode > 57) && (keyCode !== 46 || input.indexOf('.') != -1)) { // 46 is dot
           $event.preventDefault();
         }
 
-        if(this.price!=null && this.price.indexOf(".")>-1 && (this.price.split('.')[1].length > 1)){
+        if(input!=null && input.indexOf(".")>-1 && (input.split('.')[1].length > 1)){
           $event.preventDefault();
         }
       },
